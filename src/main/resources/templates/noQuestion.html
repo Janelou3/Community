@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>NoQuestion</title>
+    <link rel="stylesheet" href="/bootstrap-3.3.7-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/bootstrap-3.3.7-dist/css/community.css">
+    <script src="/bootstrap-3.3.7-dist/js/jquery-3.4.1.min.js"></script>
+    <script src="/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+</head>
+<body>
+    <!-- 导入导航栏 -->
+    <div th:insert="~{navigation :: nav}"></div>
+
+    <div class="jumbotron " align="center">
+        <h2>您尚未提过问题，点击下面按钮，立马提问吧！</h2>
+        <p><a class="btn btn-primary btn-lg" href="/publish" role="button">点我立马提问</a></p>
+    </div>
+</body>
+</html>

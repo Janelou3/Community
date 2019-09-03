@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title > [[${sectionName}]]</title>
+    <link rel="stylesheet" href="/bootstrap-3.3.7-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/bootstrap-3.3.7-dist/css/community.css">
+    <script src="/bootstrap-3.3.7-dist/js/jquery-3.4.1.min.js"></script>
+    <script src="/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+
+</head>
+<body>
+<!-- 导入导航栏 -->
+<div th:insert="~{navigation :: nav}"></div>
+
+<div class="container-fluid main">
+    <div class="row">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+            <h2><span class="glyphicon glyphicon-book" aria-hidden="true"></span>&nbsp;[[${sectionName}]]</h2>
+            <hr>
+
+            <div class="media" th:each=" question:${paginationDTO.questionDTOS}">
+                <div class="media-left">
+                    <a href="#">
+                        <img class="media-object img-circle" th:src="${question.user.avatarUrl}" >
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading" th:text="${question.title}">IDEA 无法使用控制台命令</h4>
+                    <span th:text="${question.description}"></span><br>
+                    <span class="text-desc">
+                            <span th:text="${question.commentCount}"></span> 个回复 •
+                            <span th:text="${question.viewCount}"></span> 次浏览 •
+                            <span th:text="${#dates.format(question.gmtCreate,'yyyy-MM-dd HH:mm')}"></span>
+                        </span>
+                </div>
+            </div>
+
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li th:if="${paginationDTO.showFirstPage}">
+                        <a th:href="'/profile/'+${section}+'?page=1'" aria-label="Previous">
+                            <span aria-hidden="true">&lt;&lt;</span>
+                        </a>
+                    </li>
+                    <li th:if="${paginationDTO.showPrevious}">
+                        <a th:href="@{'/profile/'+${section}+'?page='+${paginationDTO.page-1}}" aria-label="Previous">
+                            <span aria-hidden="true">&lt;</span>
+                        </a>
+                    </li>
+                    <li th:each="page: ${paginationDTO.pages}"  th:class="${paginationDTO.page == page?'active':''}">
+                        <a th:href="@{'/profile/'+${section}+'?page='+${page}}" href="" th:text="${page}">1</a>
+                    </li>
+                    <li th:if="${paginationDTO.showNext}">
+                        <a th:href="@{'/profile/'+${section}+'?page='+${paginationDTO.page+1}}" aria-label="Previous">
+                            <span aria-hidden="true">&gt;</span>
+
+                        </a>
+                    </li>
+                    <li th:if="${paginationDTO.showEndPage}">
+                        <a th:href="@{'/profile/'+${section}+'?page='+${paginationDTO.totalPages}}" aria-label="Next">
+                            <span aria-hidden="true">&gt;&gt;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+        </div>
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+            <h3 align="center">菜单</h3>
+            <div class="list-group">
+                <a href="/profile/questions" th:class="${section=='questions'?'list-group-item active':'list-group-item'}">
+                    我的问题
+                </a>
+                <a href="/profile/replies" th:class="${section=='replies'?'list-group-item active':'list-group-item'}">
+                    <span class="badge">14</span>最新的回复
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

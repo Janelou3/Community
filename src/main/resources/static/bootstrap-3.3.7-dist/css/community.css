@@ -144,3 +144,7 @@ body {
 .red {
     color: red !important;
 }
+
+.input-group .form-control{
+    width:257%;
+}
