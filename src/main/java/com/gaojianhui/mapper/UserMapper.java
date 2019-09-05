@@ -4,6 +4,8 @@ import com.gaojianhui.model.User;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by Administrator on 2019/8/28 0028.
@@ -19,4 +21,10 @@ public interface UserMapper {
 
     @Select("select * from user where id=#{id}")
     User findUserById(Long id);
+
+    @Select("select * from user where account_id = #{accountId}")
+    User findUserByAccountId(String accountId);
+
+    @Update("update user set name = #{name}, token = #{token}, gmt_modified = #{gmtModified}, avatar_url = #{avatarUrl} where account_id = #{accountId}")
+    void updateUser(User user);
 }

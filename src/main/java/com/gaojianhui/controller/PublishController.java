@@ -1,13 +1,16 @@
 package com.gaojianhui.controller;
 
+import com.gaojianhui.dto.QuestionDTO;
 import com.gaojianhui.mapper.QuestionMapper;
 import com.gaojianhui.mapper.UserMapper;
 import com.gaojianhui.model.Question;
 import com.gaojianhui.model.User;
+import com.gaojianhui.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -24,18 +27,23 @@ public class PublishController {
     private UserMapper userMapper;
     @Autowired
     private QuestionMapper questionMapper;
+    @Autowired
+    QuestionService questionService;
 
     @GetMapping("/publish")
-    public String toPublishPage(){
+    public String toPublishPage(Model model){
+        model.addAttribute("section","程序猿社区_发布");
         return "publish";
     }
 
     @PostMapping("/publish")
-    public String doPublish(@RequestParam(name = "title",required = false) String title,
+    public String doPublish(@RequestParam(name = "id",required = false) Long id,
+                            @RequestParam(name = "title",required = false) String title,
                             @RequestParam(name = "description",required = false) String description,
                             @RequestParam(name = "tag",required = false) String tag,
                             HttpServletRequest request,
                             Model model){
+        model.addAttribute("section","程序猿社区_发布");
         model.addAttribute("title",title);
         model.addAttribute("description",description);
         model.addAttribute("tag",tag);
@@ -51,34 +59,34 @@ public class PublishController {
             model.addAttribute("error","标签不能为空！");
             return "publish";
         }
-        Cookie[] cookies = request.getCookies();
-        User user = null;
-        if (cookies != null && cookies.length > 0){
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("token")){
-                    String token = cookie.getValue();
-                     user = userMapper.findUserByToken(token);
-                    if (user != null){
-                        request.getSession().setAttribute("user",user);
-                    }
-                    break;
-                }
-            }
-        }
-
+        User user = (User) request.getSession().getAttribute("user");
         if(user == null){
             model.addAttribute("error","用户未登录！");
             return "publish";
         }
 
         Question question = new Question();
+        question.setId(id);
         question.setTitle(title);
         question.setDescription(description);
         question.setTag(tag);
         question.setCreator(user.getId());
-        question.setGmtCreate(System.currentTimeMillis());
-        question.setGmtModified(question.getGmtCreate());
-        questionMapper.insertQuestion(question);
+        //question.setGmtCreate(System.currentTimeMillis());
+        //question.setGmtModified(question.getGmtCreate());
+        //questionMapper.insertQuestion(question);
+        questionService.createOrUpdateQuestion(question);
         return "redirect:/index";
+    }
+
+    @GetMapping("/publish/{id}")
+    public String editQuestion(@PathVariable(name = "id") Long id,
+                               Model model){
+        QuestionDTO questionDTO = questionService.getQuestionById(id);
+        model.addAttribute("section","程序猿社区_修改");
+        model.addAttribute("id",id);
+        model.addAttribute("title",questionDTO.getTitle());
+        model.addAttribute("description",questionDTO.getDescription());
+        model.addAttribute("tag",questionDTO.getTag());
+        return "publish";
     }
 }

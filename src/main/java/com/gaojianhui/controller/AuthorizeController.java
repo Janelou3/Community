@@ -2,9 +2,9 @@ package com.gaojianhui.controller;
 
 import com.gaojianhui.dto.AccessTokenDTO;
 import com.gaojianhui.dto.GitHubUser;
-import com.gaojianhui.mapper.UserMapper;
 import com.gaojianhui.model.User;
 import com.gaojianhui.provider.GitHubProvider;
+import com.gaojianhui.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -35,7 +35,7 @@ public class AuthorizeController {
     private String redirectUri;
 
     @Autowired
-    private UserMapper userMapper;
+    private UserService userService;
 
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
@@ -56,14 +56,24 @@ public class AuthorizeController {
             user.setAccountId(String.valueOf(gitHubUser.getId()));
             user.setName(gitHubUser.getName());
             user.setToken(token);
-            user.setGmtCreate(System.currentTimeMillis());
-            user.setGmtModified(user.getGmtCreate());
+           // user.setGmtCreate(System.currentTimeMillis());
+            //user.setGmtModified(user.getGmtCreate());
             user.setAvatarUrl(gitHubUser.getAvatarUrl());
-            userMapper.insertUser(user);
+            userService.createOrUpdate(user);
             response.addCookie(new Cookie("token",token));
             return "redirect:/index";
         } else {
             return "redirect:/index";
         }
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request,
+                         HttpServletResponse response){
+        request.getSession().removeAttribute("user");
+        Cookie cookie = new Cookie("token",null);
+        cookie.setMaxAge(0);
+        response.addCookie(cookie);
+        return "redirect:/index";
     }
 }

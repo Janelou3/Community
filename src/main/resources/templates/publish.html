@@ -2,14 +2,14 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>程序猿社区_发布</title>
-    <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.css">
-    <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/community.css">
-    <script src="bootstrap-3.3.7-dist/js/jquery-3.4.1.min.js"></script>
-    <script src="bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+    <title>[[${section}]]</title>
+    <link rel="stylesheet" href="/bootstrap-3.3.7-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/bootstrap-3.3.7-dist/css/community.css">
+    <script src="/bootstrap-3.3.7-dist/js/jquery-3.4.1.min.js"></script>
+    <script src="/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
 
-    <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/editormd.min.css">
-    <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/editormd.preview.min.css">
+    <link rel="stylesheet" href="/bootstrap-3.3.7-dist/css/editormd.min.css">
+    <link rel="stylesheet" href="/bootstrap-3.3.7-dist/css/editormd.preview.min.css">
 </head>
 <body>
     <!-- 导入导航栏 -->
@@ -22,6 +22,7 @@
                 <hr>
 
                 <form action="/publish" method="post">
+                    <input type="hidden" name="id" id="id" th:value="${id}">
                     <div class="input-group">
                         <label for="title">问题标题（简单扼要）:</label>
                         <input type="text" class="form-control" th:value="${title}" id="title" name="title"

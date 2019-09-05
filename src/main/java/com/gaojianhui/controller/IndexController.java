@@ -22,29 +22,19 @@ import java.util.List;
 public class IndexController {
 
     @Autowired
-    UserMapper userMapper;
+    private UserMapper userMapper;
     @Autowired
-    QuestionService questionService;
+    private QuestionService questionService;
 
     @GetMapping(value = {"/","/index"})
-    public String toIndexPage(HttpServletRequest request,
-                              Model model,
+    public String toIndexPage(Model model,
                               @RequestParam(name = "page",defaultValue = "1") Integer page,
                               @RequestParam(name = "size",defaultValue = "5") Integer size){
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null && cookies.length > 0){
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("token")){
-                    String token = cookie.getValue();
-                    User user = userMapper.findUserByToken(token);
-                    if (user != null){
-                        request.getSession().setAttribute("user",user);
-                    }
-                    break;
-                }
-            }
-        }
+
         PaginationDTO paginationDTO = questionService.list(page,size);
+        if (paginationDTO == null ){
+            return "noQuestion";
+        }
         model.addAttribute("paginationDTO",paginationDTO);
         return "index";
     }

@@ -21,13 +21,16 @@ import java.util.List;
 public class QuestionService {
 
     @Autowired
-    QuestionMapper questionMapper;
+    private QuestionMapper questionMapper;
     @Autowired
-    UserMapper userMapper;
+    private UserMapper userMapper;
 
     public PaginationDTO list(Integer page, Integer size){
         int totalPages;
         Integer totalCount = questionMapper.count();
+        if (totalCount == 0){
+            return null;
+        }
         if (totalCount % size == 0){
             totalPages = totalCount / size;
         } else {
@@ -87,5 +90,30 @@ public class QuestionService {
         paginationDTO.setQuestionDTOS(questionDTOS);
         return paginationDTO;
     }
+
+    public QuestionDTO getQuestionById(Long id) {
+        QuestionDTO questionDTO = new QuestionDTO();
+        Question question = questionMapper.getQuestionById(id);
+        User user = userMapper.findUserById(question.getCreator());
+        BeanUtils.copyProperties(question,questionDTO);
+        questionDTO.setUser(user);
+        return questionDTO;
+    }
+
+    public void createOrUpdateQuestion(Question question) {
+        Long id = question.getId();
+        if (id == null){
+            //插入
+            question.setGmtCreate(System.currentTimeMillis());
+            question.setGmtModified(question.getGmtCreate());
+            questionMapper.insertQuestion(question);
+        } else {
+            //编辑更新
+            question.setGmtModified(System.currentTimeMillis());
+            questionMapper.updateQuestion(question);
+        }
+
+    }
+
 }
 

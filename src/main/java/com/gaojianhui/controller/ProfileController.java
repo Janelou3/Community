@@ -22,9 +22,9 @@ import javax.servlet.http.HttpServletRequest;
 public class ProfileController {
 
     @Autowired
-    UserMapper userMapper;
+    private UserMapper userMapper;
     @Autowired
-    QuestionService questionService;
+    private QuestionService questionService;
 
     @GetMapping("/profile/{action}")
     public String toProfilePage(HttpServletRequest request,
@@ -32,21 +32,7 @@ public class ProfileController {
                                 @PathVariable(name = "action") String action,
                                 @RequestParam(name = "page",defaultValue = "1") Integer page,
                                 @RequestParam(name = "size",defaultValue = "5") Integer size){
-        Cookie[] cookies = request.getCookies();
-        User user = null;
-        if (cookies != null && cookies.length > 0){
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("token")){
-                    String token = cookie.getValue();
-                    user = userMapper.findUserByToken(token);
-                    if (user != null){
-                        request.getSession().setAttribute("user",user);
-                    }
-                    break;
-                }
-            }
-        }
-
+        User user = (User) request.getSession().getAttribute("user");
         if (user == null){
             return "redirect:/index";
         }

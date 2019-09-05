@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <title>程序猿社区</title>
-    <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/bootstrap.css">
-    <link rel="stylesheet" href="bootstrap-3.3.7-dist/css/community.css">
-    <script src="bootstrap-3.3.7-dist/js/jquery-3.4.1.min.js"></script>
-    <script src="bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+    <link rel="stylesheet" href="/bootstrap-3.3.7-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="/bootstrap-3.3.7-dist/css/community.css">
+    <script type="text/javascript" src="/bootstrap-3.3.7-dist/js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
 
 </head>
 <body>
@@ -26,7 +26,9 @@
                         </a>
                     </div>
                     <div class="media-body">
-                        <h4 class="media-heading" th:text="${question.title}">IDEA 无法使用控制台命令</h4>
+                        <a th:href="@{'/question/'+${question.id}}">
+                            <h4 class="media-heading" th:text="${question.title}"></h4>
+                        </a>
                         <span th:text="${question.description}"></span><br>
                         <span class="text-desc">
                             <span th:text="${question.commentCount}"></span> 个回复 •
