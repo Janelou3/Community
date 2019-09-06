@@ -24,10 +24,6 @@ import javax.servlet.http.HttpServletRequest;
 public class PublishController {
 
     @Autowired
-    private UserMapper userMapper;
-    @Autowired
-    private QuestionMapper questionMapper;
-    @Autowired
     QuestionService questionService;
 
     @GetMapping("/publish")
