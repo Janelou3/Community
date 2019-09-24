@@ -2,6 +2,7 @@ package com.gaojianhui.service;
 
 import com.gaojianhui.dto.PaginationDTO;
 import com.gaojianhui.dto.QuestionDTO;
+import com.gaojianhui.mapper.QuestionExtMapper;
 import com.gaojianhui.mapper.QuestionMapper;
 import com.gaojianhui.mapper.UserMapper;
 import com.gaojianhui.model.Question;
@@ -25,6 +26,8 @@ public class QuestionService {
 
     @Autowired
     private QuestionMapper questionMapper;
+    @Autowired
+    QuestionExtMapper questionExtMapper;
     @Autowired
     private UserMapper userMapper;
 
@@ -120,6 +123,9 @@ public class QuestionService {
         Long id = question.getId();
         if (id == null){
             //插入
+            question.setViewCount(0);
+            question.setLikeCount(0);
+            question.setCommentCount(0);
             question.setGmtCreate(System.currentTimeMillis());
             question.setGmtModified(question.getGmtCreate());
             questionMapper.insert(question);
@@ -132,6 +138,13 @@ public class QuestionService {
             questionMapper.updateByExampleSelective(question, questionExample);
         }
 
+    }
+
+    public void incView(Long id){
+        Question question = new Question();
+        question.setId(id);
+        question.setViewCount(1);
+        questionExtMapper.incView(question);
     }
 
 }
